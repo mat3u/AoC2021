@@ -27,7 +27,16 @@ fn find_possible_paths<'a>(
     let nexts: Vec<String> = possible_next_caves
         .into_iter()
         .map(|v| v.clone())
-        .filter(|cave| !forbidden.contains(&cave))
+        .filter(|cave| {
+            (if forbidden.contains(&cave) {
+                forbidden
+                    .into_iter()
+                    .find(|e| forbidden.into_iter().filter(|v| v == e).count() == 2)
+                    .is_none()
+            } else {
+                true
+            }) && cave != "start"
+        })
         .collect();
 
     if nexts.is_empty() || start == "end" {
@@ -95,7 +104,10 @@ fn main() {
     }
 
     let start = vec!["start".to_owned()];
-    let possible_paths: Vec<Vec<String>> = find_possible_paths(&cave_map, &start, &start).into_iter().filter(|v| v.last().expect("Must be something!") == "end").collect();
+    let possible_paths: Vec<Vec<String>> = find_possible_paths(&cave_map, &start, &start)
+        .into_iter()
+        .filter(|v| v.last().expect("Must be something!") == "end")
+        .collect();
     println!("---------------");
     for path in &possible_paths {
         println!("{:?}", path);
