@@ -34,7 +34,7 @@ fn expand_histogam(
         let predecesor = (a.clone(), new_char.clone());
         let successor = (new_char.clone(), b.clone());
 
-        *new_histogram.entry(initial_key).or_insert(0) = 0;
+        //*new_histogram.entry(initial_key).or_insert(0) = 0;
 
         *new_histogram.entry(predecesor).or_insert(0) += v;
         *new_histogram.entry(successor).or_insert(0) += v;
@@ -105,7 +105,7 @@ fn main() {
         .last()
         .expect("Pattern should have at least one character!");
 
-    (0..10).fold(initial_histogram, |input, idx| {
+    (0..40).fold(initial_histogram, |input, idx| {
         let result = expand_histogam(&input, &map);
 
         let mut histogram_of_letters: Vec<(char, u64)> = {
@@ -124,7 +124,7 @@ fn main() {
 
         print!("{}. ", idx);
 
-        histogram_of_letters.sort_by(|(a, _), (b, _)| a.cmp(b));
+        histogram_of_letters.sort_by(|(a, va), (b, vb)| va.cmp(vb));
 
         for (k, v) in histogram_of_letters {
             print!("{} -> {}, ", k, v);
